@@ -1,3 +1,5 @@
 .venv/
 TMDB_movie_dataset_v11.csv
 TMDB_movie_dataset.csv
+datasets/
+.env

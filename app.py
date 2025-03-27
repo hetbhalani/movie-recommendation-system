@@ -6,6 +6,10 @@ from sklearn.metrics.pairwise import cosine_similarity
 import ast #this is module to convert str to list
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import requests
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
@@ -95,16 +99,35 @@ sim = cosine_similarity(vector)
 #here i calculated the distance between every movies 
 # here i used cos distance method to find nearest movies 
 
+def fetch_poster(movie_id):
+    try:
+        url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={os.getenv('API_KEY')}&language=en-US"
+        data = requests.get(url)
+        data = data.json()
+        
+        if 'poster_path' not in data or data['poster_path'] is None:
+            return None
+            
+        poster_path = data['poster_path']
+        full_path = "https://image.tmdb.org/t/p/w500" + poster_path
+        return full_path
+    except Exception as e:
+        print("Error")
+        return None
+
 def recommend(movie):
     idx = new[new['title'] == movie].index[0]
     dist = sorted(list(enumerate(sim[idx])),reverse=True, key=lambda x:x[1])[1:11]
-    ans = []
+    results = []
     for i in dist:
-        print(new.iloc[i[0]].title)
-        ans.append(new.iloc[i[0]].title)
-        
-    return new.iloc[i[0]].title
-        
+        movie_data = {
+            'id': int(new.iloc[i[0]].id),
+            'title': new.iloc[i[0]].title,
+            'poster_path': fetch_poster(int(new.iloc[i[0]].id))
+        }
+        results.append(movie_data)
+    return results
+
 @app.route('/recommend', methods=['POST'])
 def process():
     data = request.get_json()
@@ -113,9 +136,17 @@ def process():
     if not search:
         return jsonify({"error":"not exists"}), 400
     
-    result = recommend(search)
-    
-    return jsonify({'result':result})
+    try:
+        results = recommend(search)
+        return jsonify({'results': results})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/movies', methods=['GET'])
+def get_movies():
+    # Get all movie titles from your dataset
+    movies = new['title'].tolist()
+    return jsonify({'movies': movies})
 
 if __name__ == '__main__':
     app.run(debug=True)
