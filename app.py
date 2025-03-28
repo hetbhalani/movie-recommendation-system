@@ -144,7 +144,6 @@ def process():
 
 @app.route('/movies', methods=['GET'])
 def get_movies():
-    # Get all movie titles from your dataset
     movies = new['title'].tolist()
     return jsonify({'movies': movies})
 
