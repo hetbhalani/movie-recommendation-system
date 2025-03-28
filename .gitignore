@@ -4,3 +4,4 @@ TMDB_movie_dataset.csv
 .env
 datasets/
 *.pkl
+*.pickel
