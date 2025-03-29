@@ -56,5 +56,11 @@ def process():
     
     return jsonify({'results':results}), 200
 
+#this is route for get moviest for suggestions in search bar
+@app.route('/movies', methods=['GET'])
+def getMovies():
+    movies_list = movies['title'].tolist()
+    return jsonify({'movies': movies_list}), 200
+
 if __name__ == '__main__':
     app.run(debug=True)
