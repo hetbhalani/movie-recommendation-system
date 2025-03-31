@@ -4,33 +4,36 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import Select from 'react-select'
 import axios from 'axios'
-import hetflixImage from "./assets/hetflix.png"; 
-
+import hetflixImage from "./assets/hetflix.png";
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('')
   const [searchOptions, setSearchOptions] = useState([])
   const [resultMovies, setResultMovies] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(()=>{
-    const fetchMovies = async ()=>{
+  useEffect(() => {
+    const fetchMovies = async () => {
       const res = await axios.get('http://127.0.0.1:5000/movies')
-      const opt = res.data.movies.map(movie =>({
+      const opt = res.data.movies.map(movie => ({
         value: movie,
         label: movie
       }))
       setSearchOptions(opt);
     }
     fetchMovies()
-  },[])
+  }, [])
 
-  const handleSearchChange = (selected)=>{
+  const handleSearchChange = (selected) => {
     setSearchTerm(selected ? selected.value : '')
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
+    setIsLoading(true)
+
     try {
       const res = await axios.post('http://127.0.0.1:5000/recommend',
         {
@@ -38,15 +41,18 @@ function App() {
         }
       )
       setResultMovies(res.data.results)
-
+      console.log(res.data.results)
     }
     catch (error) {
       console.log(error);
       setResultMovies([])
     }
+    finally {
+      setIsLoading(false)
+    }
   }
 
-  
+
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
@@ -90,47 +96,77 @@ function App() {
 
   return (
     <>
-    
-      <img src={hetflixImage} className='mt-9 place-self-center'/>
-      
-     <h1 className='text-3xl text-center mt-7 mb-10 text-gray-300'>Discover your next favorite movie</h1>
-     <form onSubmit={handleSubmit} className="flex justify-center  items-center w-full max-w-2xl mx-auto gap-3">
-      <Select
-        className="flex-1"
-        options={searchOptions}
-        onChange={handleSearchChange}
-        placeholder="Enter a movie name"
-        isSearchable
-        styles={customStyles}
-      />
-      <button 
-        type="submit"
-        className="cursor-pointer hover:bg-red-700 text-white font-medium py-3 px-3 rounded transition-colors duration-200"
-        style={{'backgroundColor':'#e50d1c'}}
-      >
-        
-        Recommend
-      </button>
+      <img src={hetflixImage} className='mt-9 place-self-center' />
+
+      <h1 className='text-3xl text-center mt-7 mb-10 text-gray-300 '>Discover your next favorite movie</h1>
+      <form onSubmit={handleSubmit} className="flex justify-center  items-center w-full max-w-2xl mx-auto gap-3">
+        <Select
+          className="flex-1"
+          options={searchOptions}
+          onChange={handleSearchChange}
+          placeholder="Enter a movie name"
+          isSearchable
+          styles={customStyles}
+        />
+        <button
+          type="submit"
+          className="cursor-pointer hover:bg-red-700 text-white font-medium py-3 px-3 rounded-lg transition-colors duration-200"
+          style={{ 'backgroundColor': '#e50d1c' }}
+        >
+
+          Recommend
+        </button>
       </form>
-      <div>
-      <h2 className="text-2xl text-center mt-10 mb-6 text-gray-300">Recommended movies</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto px-4">
-        {resultMovies.map((movie, index) => (
-          <div 
-            key={index}
-            className="bg-[#292929] rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
-          >
-            <div className="p-6">
-              <h3 className="text-xl font-semibold text-gray-200 mb-2">{movie}</h3>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-400 text-sm">Recommendation #{index + 1}</span>
-                
+      <div className="p-8 mt-5">
+        {isLoading ? (
+          <div className="grid grid-cols-5 gap-6">
+            {[...Array(10)].map((_, idx) => (
+              <div key={idx} className="bg-[#292929] rounded-xl overflow-hidden shadow-lg w-full">
+                <div className="w-full">
+                  <Skeleton 
+                    height={400} 
+                    containerClassName="block w-full"
+                    baseColor="#202020" 
+                    highlightColor="#444" 
+                  />
+
+                </div>
+                <div className="p-4">
+                  <Skeleton 
+                    height={20} 
+                    containerClassName="block w-4/5" 
+                    baseColor="#202020" 
+                    highlightColor="#444" 
+                  />
+                </div>
               </div>
-            </div>
+            ))}
           </div>
-        ))}
+        ) : resultMovies.length > 0 ? (
+          <div className="grid grid-cols-5 gap-6">
+            {resultMovies.map((movie, idx) => (
+              <div key={idx} className="bg-[#292929] rounded-xl overflow-hidden shadow-lg cursor-pointer transform transition-transform duration-300 hover:scale-103"
+                onClick={() => window.open(
+                  `https://www.google.com/search?q=${encodeURIComponent(movie.title + " movie")}`, "_blank",
+                  "noopener,noreferrer")}
+              >
+                <img
+                  className="w-full h-[400px] object-cover"
+                  src={movie.poster_path}
+                  alt="Card Image"
+                />
+                <div className="p-4">
+                  <h2 className="font-bold text-lg text-white truncate">
+                    {movie.title}
+                  </h2>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-gray-400">No Movies Found</p>
+        )}
       </div>
-     </div>
     </>
   )
 }
