@@ -6,21 +6,40 @@ from dotenv import load_dotenv
 load_dotenv()
 import pickle
 import gdown
+import sys
 
 movies = None
 sim = None
 
 def load_models():
     global movies, sim
-    
-    movie_file = os.getenv('MOVIE_LINK')
-    sim_file = os.getenv('SIM_LINK')
-    
-    gdown.download(movie_file, 'movie_list.pkl', quiet=False)
-    gdown.download(sim_file, 'similarity.pkl', quiet=False)
+    try:
+        movie_file = os.getenv('MOVIE_LINK')
+        sim_file = os.getenv('SIM_LINK')
+        
+        if not movie_file or not sim_file:
+            raise ValueError("links missing")
 
-    movies = pickle.load(open('movie_list.pkl','rb'))
-    sim = pickle.load(open('similarity.pkl','rb'))
+        print("Downloading movie file...")
+        if not gdown.download(movie_file, 'movie_list.pkl', quiet=False, fuzzy=True):
+            raise Exception("Failed movie file")
+            
+        print("Downloading similarity file...")
+        if not gdown.download(sim_file, 'similarity.pkl', quiet=False, fuzzy=True):
+            raise Exception("Failed similarity file")
+
+        with open('movie_list.pkl', 'rb') as f:
+            movies = pickle.load(f)
+            
+        with open('similarity.pkl', 'rb') as f:
+            sim = pickle.load(f)
+            
+        print("Models loaded successfully")
+        return True
+
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        sys.exit(1)
     
 load_models()
 
