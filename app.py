@@ -63,6 +63,17 @@ def generate_posters(movie_id):
         print("Error:", e)
         return None
 
+def generateIMDBid(movie_id):
+    try:
+        url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={os.getenv('API_KEY')}&language=en-US"
+        data = requests.get(url).json()
+        
+        return data['imdb_id']
+    
+    except Exception as e:
+        print("Error:", e)
+        return None
+
 def recommend(movie):
     idx = movies[movies['title'] == movie].index[0]
     dist = sorted(list(enumerate(sim[idx])),reverse=True, key=lambda x:x[1])[1:11]
@@ -74,6 +85,7 @@ def recommend(movie):
             'title': movies.iloc[i[0]].title,
             'id': int(movies.iloc[i[0]].id),
             'poster_path': generate_posters(int(movies.iloc[i[0]].id)),
+            'imdb_id': generateIMDBid(int(movies.iloc[i[0]].id))
         }
         ans.append(movie_data)
     return ans

@@ -96,7 +96,7 @@ function App() {
 
   return (
     <>
-      <img src={hetflixImage} className='mt-6 md:mt-9 place-self-center w-3/4 md:w-auto' />
+      <img src={hetflixImage} className='mt-6 md:mt-9 w-[200px] md:w-[300px] lg:w-auto place-self-center' />
 
       <h1 className='text-xl md:text-3xl text-center mt-4 md:mt-7 mb-6 md:mb-10 text-gray-300'>
         Discover your next favorite movie
@@ -120,14 +120,14 @@ function App() {
         </button>
       </form>
 
-      <div className="p-4 md:p-8 mt-3 md:mt-5">
+      <div className="p-4 md:p-8 mt-3 md:mt-5 ">
         {isLoading ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-6">
             {[...Array(10)].map((_, idx) => (
               <div key={idx} className="bg-[#292929] rounded-xl overflow-hidden shadow-lg w-full">
                 <div className="w-full">
                   <Skeleton 
-                    height={250}
+                    height={window.innerWidth < 768 ? 250 : 400}
                     containerClassName="block w-full"
                     baseColor="#202020" 
                     highlightColor="#444" 
