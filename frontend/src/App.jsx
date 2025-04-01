@@ -96,10 +96,13 @@ function App() {
 
   return (
     <>
-      <img src={hetflixImage} className='mt-9 place-self-center' />
+      <img src={hetflixImage} className='mt-6 md:mt-9 place-self-center w-3/4 md:w-auto' />
 
-      <h1 className='text-3xl text-center mt-7 mb-10 text-gray-300 '>Discover your next favorite movie</h1>
-      <form onSubmit={handleSubmit} className="flex justify-center  items-center w-full max-w-2xl mx-auto gap-3">
+      <h1 className='text-xl md:text-3xl text-center mt-4 md:mt-7 mb-6 md:mb-10 text-gray-300'>
+        Discover your next favorite movie
+      </h1>
+      
+      <form onSubmit={handleSubmit} className="flex justify-center items-center w-full max-w-2xl mx-auto gap-2 md:gap-3 px-4">
         <Select
           className="flex-1"
           options={searchOptions}
@@ -110,30 +113,29 @@ function App() {
         />
         <button
           type="submit"
-          className="cursor-pointer hover:bg-red-700 text-white font-medium py-3 px-3 rounded-lg transition-colors duration-200"
+          className="cursor-pointer hover:bg-red-700 text-white text-sm md:text-base font-medium py-2 md:py-3 px-2 md:px-3 rounded-lg transition-colors duration-200"
           style={{ 'backgroundColor': '#e50d1c' }}
         >
-
           Recommend
         </button>
       </form>
-      <div className="p-8 mt-5">
+
+      <div className="p-4 md:p-8 mt-3 md:mt-5">
         {isLoading ? (
-          <div className="grid grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-6">
             {[...Array(10)].map((_, idx) => (
               <div key={idx} className="bg-[#292929] rounded-xl overflow-hidden shadow-lg w-full">
                 <div className="w-full">
                   <Skeleton 
-                    height={400} 
+                    height={250}
                     containerClassName="block w-full"
                     baseColor="#202020" 
                     highlightColor="#444" 
                   />
-
                 </div>
-                <div className="p-4">
+                <div className="p-3 md:p-4">
                   <Skeleton 
-                    height={20} 
+                    height={16}
                     containerClassName="block w-4/5" 
                     baseColor="#202020" 
                     highlightColor="#444" 
@@ -143,7 +145,7 @@ function App() {
             ))}
           </div>
         ) : resultMovies.length > 0 ? (
-          <div className="grid grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-6">
             {resultMovies.map((movie, idx) => (
               <div key={idx} className="bg-[#292929] rounded-xl overflow-hidden shadow-lg cursor-pointer transform transition-transform duration-300 hover:scale-103"
                 onClick={() => window.open(
@@ -151,12 +153,12 @@ function App() {
                   "noopener,noreferrer")}
               >
                 <img
-                  className="w-full h-[400px] object-cover"
+                  className="w-full h-[250px] md:h-[400px] object-cover"
                   src={movie.poster_path}
                   alt="Card Image"
                 />
-                <div className="p-4">
-                  <h2 className="font-bold text-lg text-white truncate">
+                <div className="p-3 md:p-4">
+                  <h2 className="font-bold text-sm md:text-lg text-white truncate">
                     {movie.title}
                   </h2>
                 </div>
@@ -164,7 +166,7 @@ function App() {
             ))}
           </div>
         ) : (
-          <p className="text-center text-gray-400">No Movies Found</p>
+          <p className="text-center text-sm md:text-base text-gray-400">No Movies Found</p>
         )}
       </div>
     </>
