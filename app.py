@@ -5,9 +5,24 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 import pickle
+import gdown
 
-movies = pickle.load(open('movie_list.pkl','rb'))
-sim = pickle.load(open('similarity.pkl','rb'))
+movies = None
+sim = None
+
+def load_models():
+    global movies, sim
+    
+    movie_file = os.getenv('MOVIE_LINK')
+    sim_file = os.getenv('SIM_LINK')
+    
+    gdown.download(movie_file, 'movie_list.pkl', quiet=False)
+    gdown.download(sim_file, 'similarity.pkl', quiet=False)
+
+    movies = pickle.load(open('movie_list.pkl','rb'))
+    sim = pickle.load(open('similarity.pkl','rb'))
+    
+load_models()
 
 app = Flask(__name__)
 CORS(app)
