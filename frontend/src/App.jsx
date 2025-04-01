@@ -101,7 +101,7 @@ function App() {
       <h1 className='text-xl md:text-3xl text-center mt-4 md:mt-7 mb-6 md:mb-10 text-gray-300'>
         Discover your next favorite movie
       </h1>
-      
+
       <form onSubmit={handleSubmit} className="flex justify-center items-center w-full max-w-2xl mx-auto gap-2 md:gap-3 px-4">
         <Select
           className="flex-1"
@@ -126,19 +126,19 @@ function App() {
             {[...Array(10)].map((_, idx) => (
               <div key={idx} className="bg-[#292929] rounded-xl overflow-hidden shadow-lg w-full">
                 <div className="w-full">
-                  <Skeleton 
+                  <Skeleton
                     height={window.innerWidth < 768 ? 250 : 400}
                     containerClassName="block w-full"
-                    baseColor="#202020" 
-                    highlightColor="#444" 
+                    baseColor="#202020"
+                    highlightColor="#444"
                   />
                 </div>
                 <div className="p-3 md:p-4">
-                  <Skeleton 
+                  <Skeleton
                     height={16}
-                    containerClassName="block w-4/5" 
-                    baseColor="#202020" 
-                    highlightColor="#444" 
+                    containerClassName="block w-4/5"
+                    baseColor="#202020"
+                    highlightColor="#444"
                   />
                 </div>
               </div>
@@ -152,6 +152,15 @@ function App() {
                   `https://www.imdb.com/title/${encodeURIComponent(movie.imdb_id)}`, "_blank",
                   "noopener,noreferrer")}
               >
+                <button className="absolute top-4 right-4 bg-red-600 rounded-full p-3 opacity-80 hover:opacity-100 transition-opacity duration-200 z-10"
+                  onClick={()=>window.open(
+                    `https://456movie.net/movie/watch/${encodeURIComponent(movie.id)}`, "_blank",
+                    "noopener,noreferrer")}
+                  >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6 text-white">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3l14 9-14 9V3z"/>
+                  </svg>
+                </button>
                 <img
                   className="w-full h-[250px] md:h-[400px] object-cover"
                   src={movie.poster_path}
