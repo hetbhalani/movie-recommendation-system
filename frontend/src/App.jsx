@@ -16,7 +16,7 @@ function App() {
 
   useEffect(() => {
     const fetchMovies = async () => {
-      const res = await axios.get('http://127.0.0.1:5000/movies')
+      const res = await axios.get('https://movie-recommendation-system-15mq.onrender.com/movies')
       const opt = res.data.movies.map(movie => ({
         value: movie,
         label: movie
@@ -35,7 +35,7 @@ function App() {
     setIsLoading(true)
 
     try {
-      const res = await axios.post('http://127.0.0.1:5000/recommend',
+      const res = await axios.post('https://movie-recommendation-system-15mq.onrender.com/recommend',
         {
           'search_term': searchTerm
         }
