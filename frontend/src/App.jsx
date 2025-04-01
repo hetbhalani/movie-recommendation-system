@@ -149,7 +149,7 @@ function App() {
             {resultMovies.map((movie, idx) => (
               <div key={idx} className="bg-[#292929] rounded-xl overflow-hidden shadow-lg cursor-pointer transform transition-transform duration-300 hover:scale-103"
                 onClick={() => window.open(
-                  `https://www.google.com/search?q=${encodeURIComponent(movie.title + " movie")}`, "_blank",
+                  `https://www.imdb.com/title/${encodeURIComponent(movie.imdb_id)}`, "_blank",
                   "noopener,noreferrer")}
               >
                 <img
