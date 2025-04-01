@@ -3,3 +3,8 @@ flask-cors
 requests
 gdown
 python-dotenv
+numpy
+pandas
+scikit-learn
+nltk
+pickle-mixin
