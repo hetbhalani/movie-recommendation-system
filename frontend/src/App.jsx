@@ -13,21 +13,50 @@ function App() {
   const [searchOptions, setSearchOptions] = useState([])
   const [resultMovies, setResultMovies] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const [isOptionsLoading, setIsOptionsLoading] = useState(false)
 
   useEffect(() => {
     const fetchMovies = async () => {
-      const res = await axios.get('https://movie-recommendation-system-15mq.onrender.com/movies')
-      const opt = res.data.movies.map(movie => ({
-        value: movie,
-        label: movie
-      }))
-      setSearchOptions(opt);
+      setIsOptionsLoading(true)
+      try{
+        const res = await axios.get('https://movie-recommendation-system-15mq.onrender.com/movies')
+        const opt = res.data.movies.map(movie => ({
+          value: movie,
+          label: movie
+        }))
+        setSearchOptions(opt)
+      }
+      catch (error){
+        console.log(error)
+        setSearchOptions([])
+      }
+      finally{
+        setIsOptionsLoading(false) 
+      }
     }
     fetchMovies()
   }, [])
 
-  const handleSearchChange = (selected) => {
+  const handleSearchChange = async(selected) => {
     setSearchTerm(selected ? selected.value : '')
+    if (selected) {
+      setIsLoading(true)
+      try {
+        const res = await axios.post('https://movie-recommendation-system-15mq.onrender.com/recommend',
+          {
+            'search_term': selected.value
+          }
+        )
+        setResultMovies(res.data.results)
+      }
+      catch (error) {
+        console.log(error);
+        setResultMovies([])
+      }
+      finally {
+        setIsLoading(false)
+      }
+    }
   }
 
   const handleSubmit = async (e) => {
@@ -107,9 +136,11 @@ function App() {
           className="flex-1"
           options={searchOptions}
           onChange={handleSearchChange}
-          placeholder="Enter a movie name"
+          placeholder={isOptionsLoading ? 'Loading Movies...' : 'Enter a movie name'}
           isSearchable
           styles={customStyles}
+          isLoading={isOptionsLoading}
+          noOptionsMessage={()=> isOptionsLoading? 'Loading Movies...' : 'No movies available'}
         />
         <button
           type="submit"
@@ -152,7 +183,7 @@ function App() {
                   `https://www.imdb.com/title/${encodeURIComponent(movie.imdb_id)}`, "_blank",
                   "noopener,noreferrer")}
               >
-                <button className="absolute top-4 right-4 bg-red-600 rounded-full p-3 opacity-80 hover:opacity-100 transition-opacity duration-200 z-10"
+                <button className="absolute top-4 right-4 bg-red-600 rounded-full p-3 opacity-80 hover:opacity-100 transition-opacity duration-200 z-10 cursor-pointer"
                   onClick={()=>window.open(
                     `https://456movie.net/movie/watch/${encodeURIComponent(movie.id)}`, "_blank",
                     "noopener,noreferrer")}
