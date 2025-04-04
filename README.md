@@ -1,8 +1,8 @@
 # 🎬 Movie Recommendation System using Vectorization Techniques 🚀
 
-![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
-![Scikit-learn](https://img.shields.io/badge/Scikit--learn-1.0%2B-orange)
-![Flask](https://img.shields.io/badge/Flask-2.0%2B-red)
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue)&nbsp;&nbsp;&nbsp;
+![Scikit-learn](https://img.shields.io/badge/Scikit--learn-1.0%2B-orange)&nbsp;&nbsp;&nbsp;
+![Flask](https://img.shields.io/badge/Flask-2.0%2B-purple)
 
 A content-based movie recommendation system that leverages vectorization techniques to suggest similar movies based on their content.🎥
 
@@ -22,9 +22,9 @@ A content-based movie recommendation system that leverages vectorization techniq
 - 🍵 Flask (for web interface)
 - ⚛️ React (for frontend)
 
-## 🖥️ Web Interface Preview
+## 🖥️ Screenshot
 
-![preview img](https://github.com/hetbhalani/movie-recommendation-system/imgs/preview.png)
+![preview img](https://github.com/hetbhalani/movie-recommendation-system/blob/main/imgs/preview.png)
 
 ## 🧮 How It Works
 
