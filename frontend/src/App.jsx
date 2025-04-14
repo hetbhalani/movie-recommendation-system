@@ -152,7 +152,7 @@ function App() {
       </form>
 
       <div className="p-4 md:p-8 mt-3 md:mt-5 ">
-        {isLoading ? (
+        {isLoading && isOptionsLoading == false && searchTerm  ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-6">
             {[...Array(10)].map((_, idx) => (
               <div key={idx} className="bg-[#292929] rounded-xl overflow-hidden shadow-lg w-full">
